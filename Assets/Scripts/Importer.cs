@@ -9,7 +9,16 @@ public class Importer : MonoBehaviour {
 	public bool accepting;
 
 	[Header("Config")]
-	public List<GameObject> inputs;
+	public List<Importer> inputs;
+	public List<Pipe> outputs;
+
+	public void recieveColor( Color delivery ) {
+		SendMessage( "recieve", delivery );
+	}
+
+	public void sendColor( Color delivery ) {
+
+	}
 
 	// Use this for initialization
 	void Start () {
