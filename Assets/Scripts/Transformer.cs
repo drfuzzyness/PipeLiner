@@ -15,7 +15,6 @@ public class Transformer : MonoBehaviour {
 	public float duration;
 	
 	[Header("Config")]
-	public List<Importer> outputs;
 	
 	private Importer importer;
 	
@@ -31,38 +30,42 @@ public class Transformer : MonoBehaviour {
 	
 	public void changeOutputType() {
 	}
-	
-	
-	void requestToDeliver() {
-		foreach( Importer port in outputs ) {
-		}
-	}
 
 	public void recieve( Color recieved ) {
 		if( stored != Color.black )
 			Debug.LogError( "There's already " + stored + " stored, so I have to overwrite it with " + recieved );
 		stored = recieved;
+		colorIndicator.material.color = stored;
 		importer.accepting = false;
+		StartCoroutine( processColor( stored, duration ) );
 	}
 	
-	void deliver( Importer destination) {
-		Debug.Log( "Sending " + stored + " to " + destination.gameObject.name );
-		destination.recieveColor( stored );
-		stored = Color.black;
+	bool deliver() {
+		if( importer.sendColor( stored ) ) {
+			// If it send, clear storage
+			stored = Color.black;
+			colorIndicator.material.color = stored;
+			importer.accepting = true;
+			return true;
+		}
+		return false;
 	}
 
 	
 
-	IEnumerator processColor( Color theColor, float duration ) {
+	IEnumerator processColor( Color theColor, float length ) {
 		// Note, purely simulated with no visual output for now. Change later.
 		Color oldColor = theColor;
-		for( progress = 0; progress < duration; progress += Time.deltaTime ) {
-			theColor = Color.Lerp( oldColor, outputColor, progress / duration );
+		for( progress = 0; progress < length; progress += Time.deltaTime ) {
+			theColor = Color.Lerp( oldColor, outputColor, progress / length );
+			colorIndicator.material.color = theColor;
 			yield return null;
 		}
+		Debug.Log( "Processing " + oldColor + " to " + theColor + " is done." );
 		bool sentColor = false;
 		while( !sentColor ) {
-
+			sentColor = deliver();
+			yield return null;
 		}
 	}
 	

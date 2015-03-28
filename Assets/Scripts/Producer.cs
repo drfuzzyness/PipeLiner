@@ -2,19 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent (typeof (Importer))]
 public class Producer : MonoBehaviour {
+	// DON'T WORK ON UNTIL PIPES/IMPORTERS ARE DONE
 
 	[Header("State")]
 	public Queue<Color> stored;
-	public Color outputType;
-	public float progress;
-
+	
 	[Header("Balance")]
 	public float duration;
 	public int storageSpace;
+	public float baseTimeBetweenDeliveries;
+	public float timeBetweenDeliveriesIncreaseRate;
 
-	[Header("Config")]
-	public List<Importer> outputs;
 
 	private Importer importer;
 
