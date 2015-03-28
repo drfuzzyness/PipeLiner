@@ -7,7 +7,7 @@ public class Pipe : MonoBehaviour {
 	public Color stored;
 	public float duration;
 
-	private Renderer indicator;
+	public Renderer indicator;
 
 	public void sendAlongPipe( Color package) {
 		StartCoroutine( "recieve", package );
@@ -40,7 +40,7 @@ public class Pipe : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		indicator = GetComponent<Renderer>();
+		indicator.material.color = Color.black;
 	}
 	
 	// Update is called once per frame

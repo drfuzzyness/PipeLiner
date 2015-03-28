@@ -25,7 +25,10 @@ public class Transformer : MonoBehaviour {
 	void Start () {
 		// assign output type
 		importer = GetComponent<Importer>();
+		stored = Color.black;
 		importer.accepting = true;
+		importer.couldAccept = true;
+		colorIndicator.material.color = stored;
 	}
 	
 	public void changeOutputType() {
