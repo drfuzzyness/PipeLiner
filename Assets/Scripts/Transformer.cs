@@ -20,6 +20,8 @@ public class Transformer : MonoBehaviour {
 	
 	[Header("Setup")]
 	public Renderer colorIndicator;
+	public List<Renderer> colorTransformIndicator;
+	public Renderer outputColorIndicator;
 	
 	// Use this for initialization
 	void Start () {
@@ -28,17 +30,21 @@ public class Transformer : MonoBehaviour {
 		stored = Color.black;
 		importer.accepting = true;
 		importer.couldAccept = true;
-		colorIndicator.material.color = stored;
+		updateIndicators();
 	}
 	
 	public void changeOutputType() {
+	}
+
+	public void updateIndicators() {
+		colorIndicator.material.color = stored;
 	}
 
 	public void recieve( Color recieved ) {
 		if( stored != Color.black )
 			Debug.LogError( "There's already " + stored + " stored, so I have to overwrite it with " + recieved );
 		stored = recieved;
-		colorIndicator.material.color = stored;
+		updateIndicators();
 		importer.accepting = false;
 		StartCoroutine( processColor( stored, duration ) );
 	}
@@ -47,7 +53,7 @@ public class Transformer : MonoBehaviour {
 		if( importer.sendColor( stored ) ) {
 			// If it send, clear storage
 			stored = Color.black;
-			colorIndicator.material.color = stored;
+			updateIndicators();
 			importer.accepting = true;
 			return true;
 		}
@@ -61,7 +67,7 @@ public class Transformer : MonoBehaviour {
 		Color oldColor = theColor;
 		for( progress = 0; progress < length; progress += Time.deltaTime ) {
 			theColor = Color.Lerp( oldColor, outputColor, progress / length );
-			colorIndicator.material.color = theColor;
+			updateIndicators();
 			yield return null;
 		}
 		Debug.Log( "Processing " + oldColor + " to " + theColor + " is done." );
