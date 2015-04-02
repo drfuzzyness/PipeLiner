@@ -57,7 +57,6 @@ public class Transformer : MonoBehaviour {
 			Debug.LogError( "There's already " + stored + " stored, so I have to overwrite it with " + recieved );
 		stored = recieved;
 		updateIndicators();
-		importer.accepting = false;
 		StartCoroutine( processColor( stored, duration ) );
 	}
 	
