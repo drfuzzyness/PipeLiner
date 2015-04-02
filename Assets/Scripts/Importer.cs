@@ -15,6 +15,7 @@ public class Importer : MonoBehaviour {
 
 	public void recieveColor( Color delivery ) {
 		SendMessage( "recieve", delivery );
+		accepting = false;
 	}
 
 	public bool sendColor( Color delivery ) {

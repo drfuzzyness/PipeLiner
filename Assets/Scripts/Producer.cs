@@ -33,17 +33,12 @@ public class Producer : MonoBehaviour {
 		StartCoroutine( generationLoop() );
 	}
 
-	void attemptDeliveries() {
-		// Attempts to deliver the color at the head of the quene
-	}
-	
-
 	bool deliver() {
 		if( importer.sendColor( stored[0] ) ) {
 			// If it sent, clear storage
 			stored.RemoveAt(0);
 			updateIndicators();
-			importer.accepting = true;
+//			importer.accepting = true; // doesn't make sense for a producer to accept goods
 			return true;
 		}
 		return false;
