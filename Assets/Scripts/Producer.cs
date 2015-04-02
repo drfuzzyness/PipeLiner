@@ -2,11 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent (typeof (Importer))]
 public class Producer : MonoBehaviour {
 
 	[Header("State")]
-	public List<Color> stored;
 	public bool running;
 	
 	[Header("Balance")]
@@ -16,60 +14,33 @@ public class Producer : MonoBehaviour {
 
 	[Header("Data")]
 	public List<Color> possibleColors;
-	public List<Renderer> storageIndicators;
+	public List<Transform> spawnPoints;
 
-	private Importer importer;
-
-//	[Header("Setup")]
-//	public GameObject somePrefab; // don't need this
+	[Header("Setup")]
+	public GameObject colorObject;
 
 	// Use this for initialization
 	void Start () {
 		// assign output type
-		importer = GetComponent<Importer>();
-		importer.accepting = false;
-		importer.couldAccept = false;
-		updateIndicators();
 		StartCoroutine( generationLoop() );
 	}
 
-	bool deliver() {
-		if( importer.sendColor( stored[0] ) ) {
-			// If it sent, clear storage
-			stored.RemoveAt(0);
-			updateIndicators();
-//			importer.accepting = true; // doesn't make sense for a producer to accept goods
-			return true;
-		}
-		return false;
+	void deliver( Color newColor) {
+		Vector3 spawnPos = spawnPoints[ Mathf.FloorToInt( Random.Range(0, spawnPoints.Count ) ) ].position;
+		ColorObject newBlock = Instantiate( colorObject, spawnPos, transform.rotation ) as ColorObject;
+		newBlock.setColor( newColor );
 	}
-
-	void updateIndicators() {
-		for( int i = 0; i < storageIndicators.Count; i++ ) {
-			if( i < stored.Count ) {
-				storageIndicators[i].material.color = stored[i];
-			} else { 
-				storageIndicators[i].material.color = Color.black;
-			}
-		}
-	}
+	
 
 	IEnumerator generationLoop() {
 		float duration = baseTimeBetweenDeliveries;
 		while( running ) {
-			// wait for space
-			while( stored.Count > storageSpace ) {
-				// i'm full :(
-				yield return null;
-			}
 			// make a new color
 			for( float timer = 0; timer < duration; timer += Time.deltaTime ) {
 				// visible thing
 				yield return null;
 			}
-			Color randomColor = possibleColors[ Mathf.FloorToInt( Random.Range(0, possibleColors.Count ) ) ];
-			stored.Add( randomColor );
-			updateIndicators();
+			deliver( possibleColors[ Mathf.FloorToInt( Random.Range(0, possibleColors.Count ) ) ] );
 		}
 	}
 
@@ -77,8 +48,5 @@ public class Producer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if( stored.Count > 0 ) {
-			deliver();
-		}
 	}
 }
